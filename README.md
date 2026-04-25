@@ -33,6 +33,7 @@ Výstupem je obrázek uložený ve složce `images/` (standardně `shape.png`), 
 
 ## Struktura repozitáře
 
+```text
 vvp-project/
 ├── data/
 │   ├── maze_1.csv
@@ -46,6 +47,7 @@ vvp-project/
 │   └── maze.py           # hlavní soubor s třídou Maze
 ├── examples.ipynb        # ukázky spuštění a vizualizace (Jupyter Notebook)
 └── README.md
+```
 
 ---
 
@@ -59,32 +61,40 @@ vvp-project/
 
 ## Rychlá ukázka použití
 
-Základní princip práce s knihovnou (veškeré detaily naleznete v `examples.ipynb`):
-
+```python
 from maze_solver.maze import Maze
 
-### Vytvoření instance a načtení dat
+# Vytvoření instance a načtení dat
 maze = Maze()
 maze.load_from_csv("data/maze_1.csv")
 
-### Hledání cesty
+# Hledání cesty
 path = maze.find_shortest_path()
 
-### Uložení obrázku
+# Uložení obrázku
 maze.save_image(path, filename="images/vysledek.png")
+```
 
 ---
 
+## Poznámka k prostředí
+
+Projekt je doporučeno spouštět ve virtuálním prostředí (venv).
+
+### Nastavení prostředí
+```bash
 # Vytvoření virtuálního prostředí
 python -m venv venv
 
-# Aktivace prostředí (pro Windows)
-venv\Scripts\activate
-# Aktivace prostředí (pro Linux/macOS)
+# Aktivace (Windows)
+# venv\Scripts\activate
+
+# Aktivace (Linux/macOS)
 source venv/bin/activate
 
-# Instalace potřebných závislostí včetně Jupyteru
+# Instalace závislostí
 pip install numpy matplotlib jupyter
 
 # Spuštění interaktivního notebooku s ukázkami
 jupyter notebook examples.ipynb
+```
