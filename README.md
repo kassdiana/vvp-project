@@ -63,14 +63,14 @@ Základní princip práce s knihovnou (veškeré detaily naleznete v `examples.i
 
 from maze_solver.maze import Maze
 
-# Vytvoření instance a načtení dat
+### Vytvoření instance a načtení dat
 maze = Maze()
 maze.load_from_csv("data/maze_1.csv")
 
-# Hledání cesty
+### Hledání cesty
 path = maze.find_shortest_path()
 
-# Uložení obrázku
+### Uložení obrázku
 maze.save_image(path, filename="images/vysledek.png")
 
 ---
