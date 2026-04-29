@@ -32,7 +32,7 @@ class Maze:
         with open(csv_file, encoding='utf-8') as file:
             self.matrix = np.array(
                 [
-                    [info.strip() == "0" for info in line.split(",") if info.strip()]
+                    [info.strip() == "1" for info in line.split(",")]
                     for line in file
                 ], dtype=bool
             )
@@ -78,8 +78,8 @@ class Maze:
         Najde nejkratší cestu z levého horního rohu (0, 0) do pravého dolního rohu (n - 1, m - 1).
         :return: Seznam indexů průchozích vrcholů tvořících nejkratší cestu, nebo None, pokud cesta neexistuje
         """
-        if (0, 0) not in self.passable_cells and (len(self.matrix) - 1,
-                                                  len(self.matrix) - 1) not in self.passable_cells:
+        if (0, 0) not in self.passable_cells or (len(self.matrix) - 1,
+                                                  len(self.matrix[0]) - 1) not in self.passable_cells:
             return None
 
         count_vertex = len(self.passable_cells)
