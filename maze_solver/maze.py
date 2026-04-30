@@ -37,15 +37,6 @@ class Maze:
                 ], dtype=bool
             )
 
-    # def _create_node(self, index_coordinates: int, index_neighbor: int) -> None:
-    #     """
-    #     Privátní metoda pro vytvoření obousměrného propojení mezi aktuální buňkou a jejím sousedem.
-    #     :param index_coordinates: Index aktuální buňky v grafu
-    #     :param index_neighbor: Index sousední buňky v grafu
-    #     """
-    #     self.adjacency_matrix[index_coordinates][index_neighbor] = 1
-    #     self.adjacency_matrix[index_neighbor][index_coordinates] = 1
-
     def build_graph(self) -> None:
         """
         Převede 2D mřížku bludiště do podoby grafu.
@@ -71,7 +62,6 @@ class Maze:
                 coordinate = self.passable_cells.get((x + d1, y + d2))
                 if coordinate is not None:
                     self.adjacency_matrix[value][coordinate] = 1
-                    #self._create_node(index, coordinate)
 
     def find_shortest_path(self) -> list[int] | None:
         """
