@@ -10,10 +10,14 @@ DIRECTIONS = [(-1, 0), (1, 0), (0, -1), (0, 1)]
 
 class Maze:
     """
-    Třída reprezentující bludiště.
+    Třída reprezentující bludiště, která umožňuje jeho načtení z CSV, vygenerování,
+    převod na graf pomocí matice sousednosti, nalezení nejkratší cesty a její vizualizaci.
     """
 
     def __init__(self):
+        """
+        Inicializuje prázdnou instanci třídy Maze a připraví vnitřní struktury.
+        """
         # Seznam seznamů / numpy pole reprezentující samotné bludiště
         self.matrix = []
 
@@ -26,7 +30,8 @@ class Maze:
     def load_from_csv(self, csv_file: str) -> None:
         """
         Načte bludiště ze souboru formátu CSV.
-        :param csv_file: Cesta k souboru s příponou .csv
+
+        :param csv_file: Cesta k souboru s příponou .csv obsahující matici bludiště.
         """
         self.matrix = []
         with open(csv_file, encoding='utf-8') as file:
@@ -120,10 +125,12 @@ class Maze:
 
         return finish_path[::-1]
 
-    def save_image(self, path: list, filename: str = 'images/vysledek.png') -> None:
+    def save_image(self, path: list[int], filename: str = 'images/vysledek.png') -> None:
         """
         Vykreslí bludiště s vyznačenou nejkratší cestou a uloží jej jako obrázek.
-        :param path: Seznam indexů vrcholů představujících nejkratší cestu
+
+        :param path: Seznam indexů vrcholů představujících nejkratší cestu.
+        :param filename: Cesta a název souboru, kam se má výsledný obrázek uložit (výchozí: 'images/vysledek.png').
         """
         dict_index = {}
 
@@ -150,31 +157,51 @@ class Maze:
         plt.savefig(filename)
         plt.show()
 
-    def generate_maze(self, size: int = 10, wall=0.2) -> None:
+    def generate_maze(self, size: int = 10, wall: float = 0.2, template: str = "random") -> None:
         """
         Vygeneruje náhodné bludiště o dané velikosti a zaručí existenci průchozí cesty.
         :param size: Rozměr bludiště (šířka i výška)
-        :param wall: Pravděpodobnost výskytu zdi (překážky) na daném políčku
+        :param wall: Pravděpodobnost výskytu zdi (překážky) na daném políčku (použito pouze u šablony 'random').
+        :param template: Šablona bludiště. Podporované hodnoty: 'random' (náhodné), 'empty' (prázdné), 'slalom' (klikatá cesta).
         """
         self.matrix = np.zeros((size, size), dtype=bool)
 
-        cells = [
-            (i, j)
-            for i in range(size)
-            for j in range(size)
-            if (i, j) not in [(0, 0), (size - 1, size - 1)]
-        ]
+        if template == "empty":
+            # Prázdné bludiště bez zdí
+            pass
 
-        random.shuffle(cells)
+        elif template == "slalom":
+            # Vytvoření šablony slalomu (střídavé horizontální zdi s průchody)
+            for i in range(1, size, 2):
+                self.matrix[i] = True
+                if (i // 2) % 2 == 0:
+                    self.matrix[i][-1] = False
+                else:
+                    self.matrix[i][0] = False
+            self.matrix[-1][-1] = False
 
-        for (i, j) in cells:
-            if random.random() < wall:
-                continue
+        elif template == "random":
+            #Generování náhodného bludiště s kontrolou průchodnosti
+            cells = [
+                (i, j)
+                for i in range(size)
+                for j in range(size)
+                if (i, j) not in [(0, 0), (size - 1, size - 1)]
+            ]
 
-            self.matrix[i][j] = True
+            random.shuffle(cells)
 
-            self.build_graph()
-            result = self.find_shortest_path()
+            for (i, j) in cells:
+                if random.random() < wall:
+                    continue
 
-            if result is None:
-                self.matrix[i][j] = False
+                self.matrix[i][j] = True
+
+                self.build_graph()
+                result = self.find_shortest_path()
+
+                if result is None:
+                    self.matrix[i][j] = False
+        
+        else:
+            raise ValueError(f"Neznámá šablona bludiště: {template}")
