@@ -192,7 +192,7 @@ class Maze:
             random.shuffle(cells)
 
             for (i, j) in cells:
-                if random.random() < wall:
+                if random.random() > wall:
                     continue
 
                 self.matrix[i][j] = True
